@@ -1,0 +1,17 @@
+{%extends 'base.html' %}
+
+{% block content %}
+
+        <h2>Todos los registros </h2>
+
+        {{ posts }}
+        {% for post in posts %}
+        <div>
+            <h2>{{ post.title}} </h2>
+            <!--p>{{ post.content}} </p-->
+            <!--pa href="/blog/{{post.id}}"> Leer mas </a-->
+            <a href="{% url 'post' post.id %}"> Leer mas </a>
+
+        </div>
+        {% endfor %}
+{% endblock %}

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<body>
+    <form id="form" novalidate>
+        {% csrf_token %}
+        {{ form.name.label }}
+        {{ form.name }}
+        {{ form.email.label }}
+        {{ form.email }}
+
+        {{ form.message.label }}
+        {{ form.message }}
+
+        {{ form.files.label }}
+        {{ form.files }}
+
+        <input id="submit" type="submit" value="Enviar">
+
+        <script>
+                //// Variables
+                // Get csrf token
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                const form = document.querySelector('#form');
+
+                //// Functions
+
+                function sendForm(event) {
+                    event.preventDefault();
+                    const request = new Request(
+                        "{% url 'contact' %}",
+                        {
+                            method: 'POST',
+                            headers: {'X-CSRFToken': csrfToken},
+                            mode: 'same-origin',
+                            body: new FormData(form)
+                        }
+                    );
+                    fetch(request)
+                        .then((response) => {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                            throw new Error('Network response was not ok.');
+                        })
+                        .then(function(data) {
+                            console.log(data)
+                            if (data.status === 'ok') {
+                                alert('Mensaje enviado correctamente');
+                            } else {
+                                alert('Error al enviar el mensaje');
+                            }
+                        });
+                }
+
+                //// Events
+                form.addEventListener('submit', sendForm);
+
+        </script>
+    </form>
+</body>
+</html>
